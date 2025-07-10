@@ -6,6 +6,7 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 import traceback
+import re
 
 load_dotenv()
 
@@ -31,6 +32,20 @@ def load_user(user_id):
     except Exception as e:
         print(f"User loader error: {e}")
         return None
+
+# パスワードバリデーション関数
+def validate_password(password):
+    """パスワードが半角英数のみかチェック"""
+    if not password:
+        return False, "パスワードを入力してください。"
+    
+    if len(password) < 8:
+        return False, "パスワードは8文字以上で入力してください。"
+    
+    if not re.match(r'^[a-zA-Z0-9]+$', password):
+        return False, "パスワードは半角英数のみで入力してください。"
+    
+    return True, ""
 
 # データベースモデル
 class User(UserMixin, db.Model):
@@ -168,6 +183,12 @@ def register():
             
             if User.query.filter_by(email=email).first():
                 flash('このメールアドレスは既に使用されています。', 'error')
+                return render_template('register.html')
+            
+            # パスワードバリデーション
+            is_valid, error_message = validate_password(password)
+            if not is_valid:
+                flash(error_message, 'error')
                 return render_template('register.html')
             
             if password != confirm_password:

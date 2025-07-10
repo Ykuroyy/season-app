@@ -100,10 +100,12 @@ def not_found_error(error):
     return "ページが見つかりません。", 404
 
 @app.route('/')
-@login_required
 def index():
     """ホームページ - 月別カレンダー表示"""
     try:
+        if not current_user.is_authenticated:
+            return redirect(url_for('login'))
+        
         current_month = datetime.now().month
         return render_template('index.html', 
                              season_data=SEASON_DATA, 

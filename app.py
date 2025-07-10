@@ -25,6 +25,16 @@ class SeasonActivity(db.Model):
     description = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+# データベース初期化関数
+def init_db():
+    """データベースとテーブルを初期化"""
+    with app.app_context():
+        db.create_all()
+        print("データベーステーブルが作成されました")
+
+# アプリケーション起動時にデータベースを初期化
+init_db()
+
 # 季節データ
 SEASON_DATA = {
     1: {"name": "冬", "color": "#87CEEB", "activities": []},
@@ -135,6 +145,4 @@ def delete_activity(activity_id):
     return redirect(url_for('month_detail', month=month))
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True) 

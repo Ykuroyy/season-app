@@ -11,9 +11,10 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key')
 
 # データベース設定
 if os.environ.get('DATABASE_URL'):
-    # RenderのPostgreSQL URLをそのまま使用
+    # RenderのPostgreSQL URLを使用
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 else:
+    # 開発環境ではSQLiteを使用
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///season_calendar.db'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

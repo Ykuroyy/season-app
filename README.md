@@ -64,8 +64,8 @@ http://localhost:5000
 
 ## 🗄️ データベース
 
-- **開発環境**: SQLite
-- **本番環境**: PostgreSQL (Render)
+- **SQLite**: 軽量で高速なファイルベースデータベース
+- **自動作成**: アプリ初回起動時に自動でデータベースファイルが作成されます
 
 ## 🌐 デプロイ
 
@@ -76,7 +76,6 @@ http://localhost:5000
 3. GitHubリポジトリを接続
 4. 環境変数を設定：
    - `SECRET_KEY`: ランダムな文字列
-   - `DATABASE_URL`: RenderのPostgreSQL接続URL
 
 ## 📁 プロジェクト構造
 
@@ -85,6 +84,7 @@ season-app/
 ├── app.py              # メインアプリケーションファイル
 ├── requirements.txt    # Python依存関係
 ├── render.yaml         # Renderデプロイ設定
+├── runtime.txt         # Pythonバージョン指定
 ├── README.md          # このファイル
 └── templates/         # HTMLテンプレート
     ├── base.html      # ベーステンプレート
@@ -103,7 +103,7 @@ season-app/
 ## 🔧 技術スタック
 
 - **バックエンド**: Python Flask
-- **データベース**: SQLAlchemy (SQLite/PostgreSQL)
+- **データベース**: SQLAlchemy (SQLite)
 - **フロントエンド**: HTML, CSS, JavaScript
 - **デプロイ**: Render
 

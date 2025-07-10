@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}新規登録 - 季節の過ごし方アイデア{% endblock %}
+
+{% block content %}
+<div class="register-page">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 2.5em; color: #2d3748; margin-bottom: 10px;">
+            📝 新規登録
+        </h2>
+        <p style="font-size: 1.2em; color: #4a5568;">
+            季節の過ごし方アイデアを始めましょう
+        </p>
+    </div>
+
+    <div class="card" style="max-width: 400px; margin: 0 auto;">
+        <form method="POST" action="{{ url_for('register') }}">
+            <!-- ユーザー名 -->
+            <div class="form-group">
+                <label for="username">👤 ユーザー名</label>
+                <input type="text" name="username" id="username" class="form-control" required>
+                <small style="color: #718096;">他のユーザーと重複しないユーザー名を入力してください</small>
+            </div>
+
+            <!-- メールアドレス -->
+            <div class="form-group">
+                <label for="email">📧 メールアドレス</label>
+                <input type="email" name="email" id="email" class="form-control" required>
+            </div>
+
+            <!-- パスワード -->
+            <div class="form-group">
+                <label for="password">🔒 パスワード</label>
+                <input type="password" name="password" id="password" class="form-control" required>
+                <small style="color: #718096;">8文字以上の安全なパスワードを設定してください</small>
+            </div>
+
+            <!-- パスワード確認 -->
+            <div class="form-group">
+                <label for="confirm_password">🔒 パスワード確認</label>
+                <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
+            </div>
+
+            <!-- 登録ボタン -->
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="btn" style="font-size: 1.2em; padding: 15px 30px;">
+                    ✅ アカウント作成
+                </button>
+            </div>
+        </form>
+
+        <!-- ログインリンク -->
+        <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+            <p style="color: #4a5568; margin-bottom: 10px;">
+                既にアカウントをお持ちの方は
+            </p>
+            <a href="{{ url_for('login') }}" class="btn" style="background-color: #4299e1;">
+                🔐 ログイン
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

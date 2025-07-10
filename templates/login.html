@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}ログイン - 季節の過ごし方アイデア{% endblock %}
+
+{% block content %}
+<div class="login-page">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 2.5em; color: #2d3748; margin-bottom: 10px;">
+            🔐 ログイン
+        </h2>
+        <p style="font-size: 1.2em; color: #4a5568;">
+            あなたの季節アイデアにアクセスしましょう
+        </p>
+    </div>
+
+    <div class="card" style="max-width: 400px; margin: 0 auto;">
+        <form method="POST" action="{{ url_for('login') }}">
+            <!-- ユーザー名 -->
+            <div class="form-group">
+                <label for="username">👤 ユーザー名</label>
+                <input type="text" name="username" id="username" class="form-control" required>
+            </div>
+
+            <!-- パスワード -->
+            <div class="form-group">
+                <label for="password">🔒 パスワード</label>
+                <input type="password" name="password" id="password" class="form-control" required>
+            </div>
+
+            <!-- ログインボタン -->
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="btn" style="font-size: 1.2em; padding: 15px 30px;">
+                    🚀 ログイン
+                </button>
+            </div>
+        </form>
+
+        <!-- 登録リンク -->
+        <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+            <p style="color: #4a5568; margin-bottom: 10px;">
+                まだアカウントをお持ちでない方は
+            </p>
+            <a href="{{ url_for('register') }}" class="btn" style="background-color: #48bb78;">
+                📝 新規登録
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

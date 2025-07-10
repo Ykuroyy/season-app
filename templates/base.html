@@ -248,8 +248,14 @@
         </div>
         
         <div class="nav">
-            <a href="{{ url_for('index') }}" class="nav-btn">🏠 ホーム</a>
-            <a href="{{ url_for('add_activity') }}" class="nav-btn">➕ アイデア追加</a>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('index') }}" class="nav-btn">🏠 ホーム</a>
+                <a href="{{ url_for('add_activity') }}" class="nav-btn">➕ アイデア追加</a>
+                <a href="{{ url_for('logout') }}" class="nav-btn" style="background-color: #f56565;">🚪 ログアウト</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="nav-btn">🔐 ログイン</a>
+                <a href="{{ url_for('register') }}" class="nav-btn" style="background-color: #48bb78;">📝 新規登録</a>
+            {% endif %}
         </div>
         
         <div class="content">

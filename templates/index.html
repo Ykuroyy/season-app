@@ -73,9 +73,24 @@
             {% endif %}
             
             <div style="margin-top: 15px;">
-                <a href="{{ url_for('month_detail', month=month) }}" class="btn btn-small">
-                    📋 詳細を見る
-                </a>
+                {% set count = month_counts[month] %}
+                {% if count == 0 %}
+                    <a href="{{ url_for('month_detail', month=month) }}" class="btn btn-small" style="background-color: #a0aec0; color: #4a5568;">
+                        📝 まだアイデア0件
+                    </a>
+                {% elif count == 1 %}
+                    <a href="{{ url_for('month_detail', month=month) }}" class="btn btn-small" style="background-color: #48bb78;">
+                        📋 1つアイデア
+                    </a>
+                {% elif count <= 3 %}
+                    <a href="{{ url_for('month_detail', month=month) }}" class="btn btn-small" style="background-color: #ed8936;">
+                        📋 {{ count }}つアイデア
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('month_detail', month=month) }}" class="btn btn-small" style="background-color: #e53e3e;">
+                        📋 {{ count }}つアイデア
+                    </a>
+                {% endif %}
             </div>
         </div>
         {% endfor %}

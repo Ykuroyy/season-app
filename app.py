@@ -107,9 +107,17 @@ def index():
             return redirect(url_for('login'))
         
         current_month = datetime.now().month
+        
+        # 各月のアイデア数を取得
+        month_counts = {}
+        for month in range(1, 13):
+            count = SeasonActivity.query.filter_by(month=month, user_id=current_user.id).count()
+            month_counts[month] = count
+        
         return render_template('index.html', 
                              season_data=SEASON_DATA, 
-                             current_month=current_month)
+                             current_month=current_month,
+                             month_counts=month_counts)
     except Exception as e:
         print(f"Index error: {e}")
         print(traceback.format_exc())

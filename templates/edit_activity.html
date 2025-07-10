@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}アイデア編集 - 季節の過ごし方アイデア{% endblock %}
+
+{% block content %}
+<div class="edit-activity">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 2.5em; color: #2d3748; margin-bottom: 10px;">
+            ✏️ アイデアを編集
+        </h2>
+        <p style="font-size: 1.2em; color: #4a5568;">
+            アイデアの内容を修正しましょう
+        </p>
+    </div>
+
+    <div class="card" style="max-width: 800px; margin: 0 auto;">
+        <form method="POST" action="{{ url_for('edit_activity', activity_id=activity.id) }}">
+            <!-- 月選択 -->
+            <div class="form-group">
+                <label for="month">📅 月を選択してください</label>
+                <select name="month" id="month" class="form-control" required>
+                    <option value="">月を選んでください</option>
+                    {% for month in range(1, 13) %}
+                    <option value="{{ month }}" 
+                            {% if activity.month == month %}selected{% endif %}>
+                        {{ month }}月 ({{ season_data[month]['name'] }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- シーン選択 -->
+            <div class="form-group">
+                <label for="activity_type">👥 誰と過ごしますか？</label>
+                <select name="activity_type" id="activity_type" class="form-control" required>
+                    <option value="">シーンを選んでください</option>
+                    <option value="一人" {% if activity.activity_type == '一人' %}selected{% endif %}>👤 一人で過ごす</option>
+                    <option value="友達" {% if activity.activity_type == '友達' %}selected{% endif %}>👥 友達と過ごす</option>
+                    <option value="家族" {% if activity.activity_type == '家族' %}selected{% endif %}>👨‍👩‍👧‍👦 家族と過ごす</option>
+                    <option value="お年寄り" {% if activity.activity_type == 'お年寄り' %}selected{% endif %}>👴👵 お年寄りの両親と過ごす</option>
+                </select>
+            </div>
+
+            <!-- カテゴリ選択 -->
+            <div class="form-group">
+                <label for="category">📂 カテゴリを選択してください</label>
+                <select name="category" id="category" class="form-control" required>
+                    <option value="">カテゴリを選んでください</option>
+                    <option value="外出" {% if activity.category == '外出' %}selected{% endif %}>🚶‍♀️ 外出</option>
+                    <option value="家" {% if activity.category == '家' %}selected{% endif %}>🏠 家での過ごし方</option>
+                    <option value="食事" {% if activity.category == '食事' %}selected{% endif %}>🍽️ 食事</option>
+                    <option value="趣味" {% if activity.category == '趣味' %}selected{% endif %}>🎨 趣味・娯楽</option>
+                    <option value="運動" {% if activity.category == '運動' %}selected{% endif %}>🏃‍♀️ 運動・スポーツ</option>
+                    <option value="その他" {% if activity.category == 'その他' %}selected{% endif %}>✨ その他</option>
+                </select>
+            </div>
+
+            <!-- タイトル -->
+            <div class="form-group">
+                <label for="title">📝 アイデアのタイトル</label>
+                <input type="text" name="title" id="title" class="form-control" 
+                       value="{{ activity.title }}" required>
+            </div>
+
+            <!-- 詳細説明 -->
+            <div class="form-group">
+                <label for="description">📖 詳細な説明（任意）</label>
+                <textarea name="description" id="description" class="form-control">{{ activity.description or '' }}</textarea>
+            </div>
+
+            <!-- ボタン -->
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="btn" style="font-size: 1.2em; padding: 20px 40px;">
+                    ✅ アイデアを更新
+                </button>
+                <a href="{{ url_for('month_detail', month=activity.month) }}" class="btn btn-danger" style="margin-left: 15px;">
+                    ❌ キャンセル
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

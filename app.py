@@ -102,6 +102,28 @@ def add_activity():
     
     return render_template('add_activity.html', season_data=SEASON_DATA)
 
+@app.route('/edit_activity/<int:activity_id>', methods=['GET', 'POST'])
+def edit_activity(activity_id):
+    """アクティビティ編集"""
+    activity = SeasonActivity.query.get_or_404(activity_id)
+    
+    if request.method == 'POST':
+        activity.month = int(request.form['month'])
+        activity.activity_type = request.form['activity_type']
+        activity.category = request.form['category']
+        activity.title = request.form['title']
+        activity.description = request.form['description']
+        activity.season = SEASON_DATA[activity.month]['name']
+        
+        db.session.commit()
+        
+        flash('アイデアが更新されました！', 'success')
+        return redirect(url_for('month_detail', month=activity.month))
+    
+    return render_template('edit_activity.html', 
+                         activity=activity, 
+                         season_data=SEASON_DATA)
+
 @app.route('/delete_activity/<int:activity_id>')
 def delete_activity(activity_id):
     """アクティビティ削除"""

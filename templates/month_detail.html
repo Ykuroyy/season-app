@@ -46,6 +46,10 @@
                         📂 {{ activity.category }} | 📅 {{ activity.created_at.strftime('%Y/%m/%d') }}
                     </div>
                     <div style="margin-top: 10px;">
+                        <a href="{{ url_for('edit_activity', activity_id=activity.id) }}" 
+                           class="btn btn-small" style="margin-right: 10px;">
+                            ✏️ 編集
+                        </a>
                         <a href="{{ url_for('delete_activity', activity_id=activity.id) }}" 
                            class="btn btn-danger btn-small"
                            onclick="return confirm('このアイデアを削除しますか？')">
@@ -78,6 +82,10 @@
                         📂 {{ activity.category }} | 📅 {{ activity.created_at.strftime('%Y/%m/%d') }}
                     </div>
                     <div style="margin-top: 10px;">
+                        <a href="{{ url_for('edit_activity', activity_id=activity.id) }}" 
+                           class="btn btn-small" style="margin-right: 10px;">
+                            ✏️ 編集
+                        </a>
                         <a href="{{ url_for('delete_activity', activity_id=activity.id) }}" 
                            class="btn btn-danger btn-small"
                            onclick="return confirm('このアイデアを削除しますか？')">
@@ -110,6 +118,10 @@
                         📂 {{ activity.category }} | 📅 {{ activity.created_at.strftime('%Y/%m/%d') }}
                     </div>
                     <div style="margin-top: 10px;">
+                        <a href="{{ url_for('edit_activity', activity_id=activity.id) }}" 
+                           class="btn btn-small" style="margin-right: 10px;">
+                            ✏️ 編集
+                        </a>
                         <a href="{{ url_for('delete_activity', activity_id=activity.id) }}" 
                            class="btn btn-danger btn-small"
                            onclick="return confirm('このアイデアを削除しますか？')">
@@ -142,6 +154,10 @@
                         📂 {{ activity.category }} | 📅 {{ activity.created_at.strftime('%Y/%m/%d') }}
                     </div>
                     <div style="margin-top: 10px;">
+                        <a href="{{ url_for('edit_activity', activity_id=activity.id) }}" 
+                           class="btn btn-small" style="margin-right: 10px;">
+                            ✏️ 編集
+                        </a>
                         <a href="{{ url_for('delete_activity', activity_id=activity.id) }}" 
                            class="btn btn-danger btn-small"
                            onclick="return confirm('このアイデアを削除しますか？')">

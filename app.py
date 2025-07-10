@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+import traceback
 
 load_dotenv()
 
@@ -25,7 +26,11 @@ login_manager.login_message_category = 'info'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    try:
+        return User.query.get(int(user_id))
+    except Exception as e:
+        print(f"User loader error: {e}")
+        return None
 
 # データベースモデル
 class User(UserMixin, db.Model):
@@ -56,9 +61,13 @@ class SeasonActivity(db.Model):
 # データベース初期化関数
 def init_db():
     """データベースとテーブルを初期化"""
-    with app.app_context():
-        db.create_all()
-        print("データベーステーブルが作成されました")
+    try:
+        with app.app_context():
+            db.create_all()
+            print("データベーステーブルが作成されました")
+    except Exception as e:
+        print(f"データベース初期化エラー: {e}")
+        print(traceback.format_exc())
 
 # アプリケーション起動時にデータベースを初期化
 init_db()
@@ -79,171 +88,221 @@ SEASON_DATA = {
     12: {"name": "冬", "color": "#87CEEB", "activities": []}
 }
 
+@app.errorhandler(500)
+def internal_error(error):
+    """500エラーハンドラー"""
+    db.session.rollback()
+    return "サーバーエラーが発生しました。しばらく時間をおいて再度お試しください。", 500
+
+@app.errorhandler(404)
+def not_found_error(error):
+    """404エラーハンドラー"""
+    return "ページが見つかりません。", 404
+
 @app.route('/')
 @login_required
 def index():
     """ホームページ - 月別カレンダー表示"""
-    current_month = datetime.now().month
-    return render_template('index.html', 
-                         season_data=SEASON_DATA, 
-                         current_month=current_month)
+    try:
+        current_month = datetime.now().month
+        return render_template('index.html', 
+                             season_data=SEASON_DATA, 
+                             current_month=current_month)
+    except Exception as e:
+        print(f"Index error: {e}")
+        print(traceback.format_exc())
+        return "エラーが発生しました", 500
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """ログインページ"""
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-        
-        if user and user.check_password(password):
-            login_user(user)
-            flash('ログインしました！', 'success')
+    try:
+        if current_user.is_authenticated:
             return redirect(url_for('index'))
-        else:
-            flash('ユーザー名またはパスワードが正しくありません。', 'error')
-    
-    return render_template('login.html')
+        
+        if request.method == 'POST':
+            username = request.form['username']
+            password = request.form['password']
+            user = User.query.filter_by(username=username).first()
+            
+            if user and user.check_password(password):
+                login_user(user)
+                flash('ログインしました！', 'success')
+                return redirect(url_for('index'))
+            else:
+                flash('ユーザー名またはパスワードが正しくありません。', 'error')
+        
+        return render_template('login.html')
+    except Exception as e:
+        print(f"Login error: {e}")
+        print(traceback.format_exc())
+        return "ログインエラーが発生しました", 500
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """ユーザー登録ページ"""
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
+    try:
+        if current_user.is_authenticated:
+            return redirect(url_for('index'))
         
-        # バリデーション
-        if User.query.filter_by(username=username).first():
-            flash('このユーザー名は既に使用されています。', 'error')
-            return render_template('register.html')
+        if request.method == 'POST':
+            username = request.form['username']
+            email = request.form['email']
+            password = request.form['password']
+            confirm_password = request.form['confirm_password']
+            
+            # バリデーション
+            if User.query.filter_by(username=username).first():
+                flash('このユーザー名は既に使用されています。', 'error')
+                return render_template('register.html')
+            
+            if User.query.filter_by(email=email).first():
+                flash('このメールアドレスは既に使用されています。', 'error')
+                return render_template('register.html')
+            
+            if password != confirm_password:
+                flash('パスワードが一致しません。', 'error')
+                return render_template('register.html')
+            
+            # ユーザー作成
+            user = User(username=username, email=email)
+            user.set_password(password)
+            db.session.add(user)
+            db.session.commit()
+            
+            flash('アカウントが作成されました！ログインしてください。', 'success')
+            return redirect(url_for('login'))
         
-        if User.query.filter_by(email=email).first():
-            flash('このメールアドレスは既に使用されています。', 'error')
-            return render_template('register.html')
-        
-        if password != confirm_password:
-            flash('パスワードが一致しません。', 'error')
-            return render_template('register.html')
-        
-        # ユーザー作成
-        user = User(username=username, email=email)
-        user.set_password(password)
-        db.session.add(user)
-        db.session.commit()
-        
-        flash('アカウントが作成されました！ログインしてください。', 'success')
-        return redirect(url_for('login'))
-    
-    return render_template('register.html')
+        return render_template('register.html')
+    except Exception as e:
+        print(f"Register error: {e}")
+        print(traceback.format_exc())
+        return "登録エラーが発生しました", 500
 
 @app.route('/logout')
 @login_required
 def logout():
     """ログアウト"""
-    logout_user()
-    flash('ログアウトしました。', 'info')
-    return redirect(url_for('login'))
+    try:
+        logout_user()
+        flash('ログアウトしました。', 'info')
+        return redirect(url_for('login'))
+    except Exception as e:
+        print(f"Logout error: {e}")
+        return redirect(url_for('login'))
 
 @app.route('/month/<int:month>')
 @login_required
 def month_detail(month):
     """月別詳細ページ"""
-    if month < 1 or month > 12:
-        return redirect(url_for('index'))
-    
-    # 現在のユーザーのアクティビティのみ取得
-    activities = SeasonActivity.query.filter_by(month=month, user_id=current_user.id).all()
-    season_info = SEASON_DATA[month]
-    
-    # アクティビティをカテゴリ別に整理
-    categorized_activities = {
-        '一人': [],
-        '友達': [],
-        '家族': [],
-        'お年寄り': []
-    }
-    
-    for activity in activities:
-        if activity.activity_type in categorized_activities:
-            categorized_activities[activity.activity_type].append(activity)
-    
-    return render_template('month_detail.html', 
-                         month=month, 
-                         season_info=season_info,
-                         activities=categorized_activities)
+    try:
+        if month < 1 or month > 12:
+            return redirect(url_for('index'))
+        
+        # 現在のユーザーのアクティビティのみ取得
+        activities = SeasonActivity.query.filter_by(month=month, user_id=current_user.id).all()
+        season_info = SEASON_DATA[month]
+        
+        # アクティビティをカテゴリ別に整理
+        categorized_activities = {
+            '一人': [],
+            '友達': [],
+            '家族': [],
+            'お年寄り': []
+        }
+        
+        for activity in activities:
+            if activity.activity_type in categorized_activities:
+                categorized_activities[activity.activity_type].append(activity)
+        
+        return render_template('month_detail.html', 
+                             month=month, 
+                             season_info=season_info,
+                             activities=categorized_activities)
+    except Exception as e:
+        print(f"Month detail error: {e}")
+        print(traceback.format_exc())
+        return "エラーが発生しました", 500
 
 @app.route('/add_activity', methods=['GET', 'POST'])
 @login_required
 def add_activity():
     """アクティビティ追加"""
-    if request.method == 'POST':
-        month = int(request.form['month'])
-        activity_type = request.form['activity_type']
-        category = request.form['category']
-        title = request.form['title']
-        description = request.form['description']
+    try:
+        if request.method == 'POST':
+            month = int(request.form['month'])
+            activity_type = request.form['activity_type']
+            category = request.form['category']
+            title = request.form['title']
+            description = request.form['description']
+            
+            new_activity = SeasonActivity(
+                user_id=current_user.id,
+                month=month,
+                season=SEASON_DATA[month]['name'],
+                activity_type=activity_type,
+                category=category,
+                title=title,
+                description=description
+            )
+            
+            db.session.add(new_activity)
+            db.session.commit()
+            
+            flash('アイデアが追加されました！', 'success')
+            return redirect(url_for('month_detail', month=month))
         
-        new_activity = SeasonActivity(
-            user_id=current_user.id,
-            month=month,
-            season=SEASON_DATA[month]['name'],
-            activity_type=activity_type,
-            category=category,
-            title=title,
-            description=description
-        )
-        
-        db.session.add(new_activity)
-        db.session.commit()
-        
-        flash('アイデアが追加されました！', 'success')
-        return redirect(url_for('month_detail', month=month))
-    
-    return render_template('add_activity.html', season_data=SEASON_DATA)
+        return render_template('add_activity.html', season_data=SEASON_DATA)
+    except Exception as e:
+        print(f"Add activity error: {e}")
+        print(traceback.format_exc())
+        return "エラーが発生しました", 500
 
 @app.route('/edit_activity/<int:activity_id>', methods=['GET', 'POST'])
 @login_required
 def edit_activity(activity_id):
     """アクティビティ編集"""
-    # 自分のアクティビティのみ編集可能
-    activity = SeasonActivity.query.filter_by(id=activity_id, user_id=current_user.id).first_or_404()
-    
-    if request.method == 'POST':
-        activity.month = int(request.form['month'])
-        activity.activity_type = request.form['activity_type']
-        activity.category = request.form['category']
-        activity.title = request.form['title']
-        activity.description = request.form['description']
-        activity.season = SEASON_DATA[activity.month]['name']
+    try:
+        # 自分のアクティビティのみ編集可能
+        activity = SeasonActivity.query.filter_by(id=activity_id, user_id=current_user.id).first_or_404()
         
-        db.session.commit()
+        if request.method == 'POST':
+            activity.month = int(request.form['month'])
+            activity.activity_type = request.form['activity_type']
+            activity.category = request.form['category']
+            activity.title = request.form['title']
+            activity.description = request.form['description']
+            activity.season = SEASON_DATA[activity.month]['name']
+            
+            db.session.commit()
+            
+            flash('アイデアが更新されました！', 'success')
+            return redirect(url_for('month_detail', month=activity.month))
         
-        flash('アイデアが更新されました！', 'success')
-        return redirect(url_for('month_detail', month=activity.month))
-    
-    return render_template('edit_activity.html', 
-                         activity=activity, 
-                         season_data=SEASON_DATA)
+        return render_template('edit_activity.html', 
+                             activity=activity, 
+                             season_data=SEASON_DATA)
+    except Exception as e:
+        print(f"Edit activity error: {e}")
+        print(traceback.format_exc())
+        return "エラーが発生しました", 500
 
 @app.route('/delete_activity/<int:activity_id>')
 @login_required
 def delete_activity(activity_id):
     """アクティビティ削除"""
-    # 自分のアクティビティのみ削除可能
-    activity = SeasonActivity.query.filter_by(id=activity_id, user_id=current_user.id).first_or_404()
-    month = activity.month
-    db.session.delete(activity)
-    db.session.commit()
-    flash('アイデアが削除されました', 'info')
-    return redirect(url_for('month_detail', month=month))
+    try:
+        # 自分のアクティビティのみ削除可能
+        activity = SeasonActivity.query.filter_by(id=activity_id, user_id=current_user.id).first_or_404()
+        month = activity.month
+        db.session.delete(activity)
+        db.session.commit()
+        flash('アイデアが削除されました', 'info')
+        return redirect(url_for('month_detail', month=month))
+    except Exception as e:
+        print(f"Delete activity error: {e}")
+        print(traceback.format_exc())
+        return "エラーが発生しました", 500
 
 if __name__ == '__main__':
     app.run(debug=True) 

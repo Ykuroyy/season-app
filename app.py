@@ -180,8 +180,10 @@ def register():
             db.session.add(user)
             db.session.commit()
             
-            flash('アカウントが作成されました！ログインしてください。', 'success')
-            return redirect(url_for('login'))
+            # 自動ログイン
+            login_user(user)
+            flash(f'{username}さん、ようこそ！アカウントが作成されました。', 'success')
+            return redirect(url_for('index'))
         
         return render_template('register.html')
     except Exception as e:

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ month }}月 - 季節カレンダー{% endblock %}
+{% block title %}{{ month }}月 - 季節の過ごし方アイデア{% endblock %}
 
 {% block content %}
 <div class="month-detail">
@@ -25,7 +25,7 @@
             {{ season_info.name }}の季節
         </p>
         <a href="{{ url_for('add_activity') }}?month={{ month }}" class="btn">
-            ➕ 新しいアクティビティを追加
+            ➕ 新しいアイデアを追加
         </a>
     </div>
 
@@ -48,7 +48,7 @@
                     <div style="margin-top: 10px;">
                         <a href="{{ url_for('delete_activity', activity_id=activity.id) }}" 
                            class="btn btn-danger btn-small"
-                           onclick="return confirm('このアクティビティを削除しますか？')">
+                           onclick="return confirm('このアイデアを削除しますか？')">
                             🗑️ 削除
                         </a>
                     </div>
@@ -56,7 +56,7 @@
                 {% endfor %}
             {% else %}
                 <p style="color: #718096; font-style: italic; text-align: center; padding: 20px;">
-                    まだ一人でのアクティビティがありません<br>
+                    まだ一人でのアイデアがありません<br>
                     新しい過ごし方を追加してみましょう！
                 </p>
             {% endif %}
@@ -80,7 +80,7 @@
                     <div style="margin-top: 10px;">
                         <a href="{{ url_for('delete_activity', activity_id=activity.id) }}" 
                            class="btn btn-danger btn-small"
-                           onclick="return confirm('このアクティビティを削除しますか？')">
+                           onclick="return confirm('このアイデアを削除しますか？')">
                             🗑️ 削除
                         </a>
                     </div>
@@ -88,7 +88,7 @@
                 {% endfor %}
             {% else %}
                 <p style="color: #718096; font-style: italic; text-align: center; padding: 20px;">
-                    まだ友達とのアクティビティがありません<br>
+                    まだ友達とのアイデアがありません<br>
                     楽しい思い出を作りましょう！
                 </p>
             {% endif %}
@@ -112,7 +112,7 @@
                     <div style="margin-top: 10px;">
                         <a href="{{ url_for('delete_activity', activity_id=activity.id) }}" 
                            class="btn btn-danger btn-small"
-                           onclick="return confirm('このアクティビティを削除しますか？')">
+                           onclick="return confirm('このアイデアを削除しますか？')">
                             🗑️ 削除
                         </a>
                     </div>
@@ -120,7 +120,7 @@
                 {% endfor %}
             {% else %}
                 <p style="color: #718096; font-style: italic; text-align: center; padding: 20px;">
-                    まだ家族とのアクティビティがありません<br>
+                    まだ家族とのアイデアがありません<br>
                     家族の絆を深める時間を作りましょう！
                 </p>
             {% endif %}
@@ -144,7 +144,7 @@
                     <div style="margin-top: 10px;">
                         <a href="{{ url_for('delete_activity', activity_id=activity.id) }}" 
                            class="btn btn-danger btn-small"
-                           onclick="return confirm('このアクティビティを削除しますか？')">
+                           onclick="return confirm('このアイデアを削除しますか？')">
                             🗑️ 削除
                         </a>
                     </div>
@@ -152,7 +152,7 @@
                 {% endfor %}
             {% else %}
                 <p style="color: #718096; font-style: italic; text-align: center; padding: 20px;">
-                    まだお年寄りとのアクティビティがありません<br>
+                    まだお年寄りとのアイデアがありません<br>
                     大切な時間を一緒に過ごしましょう！
                 </p>
             {% endif %}

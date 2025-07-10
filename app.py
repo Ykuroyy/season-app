@@ -105,7 +105,7 @@ def add_activity():
         db.session.add(new_activity)
         db.session.commit()
         
-        flash('アクティビティが追加されました！', 'success')
+        flash('アイデアが追加されました！', 'success')
         return redirect(url_for('month_detail', month=month))
     
     return render_template('add_activity.html', season_data=SEASON_DATA)
@@ -117,7 +117,7 @@ def delete_activity(activity_id):
     month = activity.month
     db.session.delete(activity)
     db.session.commit()
-    flash('アクティビティが削除されました', 'info')
+    flash('アイデアが削除されました', 'info')
     return redirect(url_for('month_detail', month=month))
 
 if __name__ == '__main__':

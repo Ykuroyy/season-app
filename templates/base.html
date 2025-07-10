@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}季節カレンダー{% endblock %}</title>
+    <title>{% block title %}季節の過ごし方アイデア{% endblock %}</title>
     <style>
         * {
             margin: 0;
@@ -243,13 +243,13 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🌸 季節カレンダー 🌸</h1>
+            <h1>🌸 季節の過ごし方アイデア 🌸</h1>
             <p>季節に合わせた楽しい過ごし方を記録しましょう</p>
         </div>
         
         <div class="nav">
             <a href="{{ url_for('index') }}" class="nav-btn">🏠 ホーム</a>
-            <a href="{{ url_for('add_activity') }}" class="nav-btn">➕ アクティビティ追加</a>
+            <a href="{{ url_for('add_activity') }}" class="nav-btn">➕ アイデア追加</a>
         </div>
         
         <div class="content">

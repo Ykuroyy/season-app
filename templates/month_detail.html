@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}{{ month }}月 - 季節カレンダー{% endblock %}
+
+{% block content %}
+<div class="month-detail">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 2.5em; color: #2d3748; margin-bottom: 10px;">
+            {% if month == 1 %}❄️
+            {% elif month == 2 %}❄️
+            {% elif month == 3 %}🌸
+            {% elif month == 4 %}🌸
+            {% elif month == 5 %}🌺
+            {% elif month == 6 %}🌻
+            {% elif month == 7 %}🌻
+            {% elif month == 8 %}🌻
+            {% elif month == 9 %}🍁
+            {% elif month == 10 %}🍁
+            {% elif month == 11 %}🍂
+            {% elif month == 12 %}❄️
+            {% endif %}
+            {{ month }}月の過ごし方
+        </h2>
+        <p style="font-size: 1.3em; color: #4a5568; margin-bottom: 20px;">
+            {{ season_info.name }}の季節
+        </p>
+        <a href="{{ url_for('add_activity') }}?month={{ month }}" class="btn">
+            ➕ 新しいアクティビティを追加
+        </a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+        <!-- 一人で -->
+        <div class="card" style="border-left: 5px solid #4299e1;">
+            <h3 style="color: #2d3748; margin-bottom: 20px;">
+                👤 一人で過ごす
+            </h3>
+            {% if activities['一人'] %}
+                {% for activity in activities['一人'] %}
+                <div class="activity-item">
+                    <div class="activity-title">{{ activity.title }}</div>
+                    {% if activity.description %}
+                    <div class="activity-description">{{ activity.description }}</div>
+                    {% endif %}
+                    <div class="activity-meta">
+                        📂 {{ activity.category }} | 📅 {{ activity.created_at.strftime('%Y/%m/%d') }}
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <a href="{{ url_for('delete_activity', activity_id=activity.id) }}" 
+                           class="btn btn-danger btn-small"
+                           onclick="return confirm('このアクティビティを削除しますか？')">
+                            🗑️ 削除
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color: #718096; font-style: italic; text-align: center; padding: 20px;">
+                    まだ一人でのアクティビティがありません<br>
+                    新しい過ごし方を追加してみましょう！
+                </p>
+            {% endif %}
+        </div>
+
+        <!-- 友達と -->
+        <div class="card" style="border-left: 5px solid #48bb78;">
+            <h3 style="color: #2d3748; margin-bottom: 20px;">
+                👥 友達と過ごす
+            </h3>
+            {% if activities['友達'] %}
+                {% for activity in activities['友達'] %}
+                <div class="activity-item">
+                    <div class="activity-title">{{ activity.title }}</div>
+                    {% if activity.description %}
+                    <div class="activity-description">{{ activity.description }}</div>
+                    {% endif %}
+                    <div class="activity-meta">
+                        📂 {{ activity.category }} | 📅 {{ activity.created_at.strftime('%Y/%m/%d') }}
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <a href="{{ url_for('delete_activity', activity_id=activity.id) }}" 
+                           class="btn btn-danger btn-small"
+                           onclick="return confirm('このアクティビティを削除しますか？')">
+                            🗑️ 削除
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color: #718096; font-style: italic; text-align: center; padding: 20px;">
+                    まだ友達とのアクティビティがありません<br>
+                    楽しい思い出を作りましょう！
+                </p>
+            {% endif %}
+        </div>
+
+        <!-- 家族と -->
+        <div class="card" style="border-left: 5px solid #ed8936;">
+            <h3 style="color: #2d3748; margin-bottom: 20px;">
+                👨‍👩‍👧‍👦 家族と過ごす
+            </h3>
+            {% if activities['家族'] %}
+                {% for activity in activities['家族'] %}
+                <div class="activity-item">
+                    <div class="activity-title">{{ activity.title }}</div>
+                    {% if activity.description %}
+                    <div class="activity-description">{{ activity.description }}</div>
+                    {% endif %}
+                    <div class="activity-meta">
+                        📂 {{ activity.category }} | 📅 {{ activity.created_at.strftime('%Y/%m/%d') }}
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <a href="{{ url_for('delete_activity', activity_id=activity.id) }}" 
+                           class="btn btn-danger btn-small"
+                           onclick="return confirm('このアクティビティを削除しますか？')">
+                            🗑️ 削除
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color: #718096; font-style: italic; text-align: center; padding: 20px;">
+                    まだ家族とのアクティビティがありません<br>
+                    家族の絆を深める時間を作りましょう！
+                </p>
+            {% endif %}
+        </div>
+
+        <!-- お年寄りと -->
+        <div class="card" style="border-left: 5px solid #9f7aea;">
+            <h3 style="color: #2d3748; margin-bottom: 20px;">
+                👴👵 お年寄りの両親と過ごす
+            </h3>
+            {% if activities['お年寄り'] %}
+                {% for activity in activities['お年寄り'] %}
+                <div class="activity-item">
+                    <div class="activity-title">{{ activity.title }}</div>
+                    {% if activity.description %}
+                    <div class="activity-description">{{ activity.description }}</div>
+                    {% endif %}
+                    <div class="activity-meta">
+                        📂 {{ activity.category }} | 📅 {{ activity.created_at.strftime('%Y/%m/%d') }}
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <a href="{{ url_for('delete_activity', activity_id=activity.id) }}" 
+                           class="btn btn-danger btn-small"
+                           onclick="return confirm('このアクティビティを削除しますか？')">
+                            🗑️ 削除
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color: #718096; font-style: italic; text-align: center; padding: 20px;">
+                    まだお年寄りとのアクティビティがありません<br>
+                    大切な時間を一緒に過ごしましょう！
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="{{ url_for('index') }}" class="btn">
+            🏠 ホームに戻る
+        </a>
+    </div>
+</div>
+{% endblock %} 

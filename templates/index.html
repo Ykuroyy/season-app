@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}ホーム - 季節カレンダー{% endblock %}
+
+{% block content %}
+<div class="calendar-grid">
+    <h2 style="text-align: center; margin-bottom: 30px; font-size: 2em; color: #2d3748;">
+        📅 12ヶ月の季節カレンダー
+    </h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+        {% for month in range(1, 13) %}
+        <div class="month-card" style="
+            background: {{ season_data[month]['color'] }}20;
+            border: 3px solid {{ season_data[month]['color'] }};
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            {% if month == current_month %}
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+            {% endif %}
+        " onclick="window.location.href='{{ url_for('month_detail', month=month) }}'">
+            
+            <div style="font-size: 3em; margin-bottom: 15px;">
+                {% if month == 1 %}❄️
+                {% elif month == 2 %}❄️
+                {% elif month == 3 %}🌸
+                {% elif month == 4 %}🌸
+                {% elif month == 5 %}🌺
+                {% elif month == 6 %}🌻
+                {% elif month == 7 %}🌻
+                {% elif month == 8 %}🌻
+                {% elif month == 9 %}🍁
+                {% elif month == 10 %}🍁
+                {% elif month == 11 %}🍂
+                {% elif month == 12 %}❄️
+                {% endif %}
+            </div>
+            
+            <h3 style="
+                font-size: 1.5em;
+                color: #2d3748;
+                margin-bottom: 10px;
+                font-weight: bold;
+            ">
+                {{ month }}月
+            </h3>
+            
+            <p style="
+                font-size: 1.2em;
+                color: #4a5568;
+                margin-bottom: 15px;
+                font-weight: bold;
+            ">
+                {{ season_data[month]['name'] }}
+            </p>
+            
+            {% if month == current_month %}
+            <div style="
+                background: #48bb78;
+                color: white;
+                padding: 8px 15px;
+                border-radius: 20px;
+                font-size: 0.9em;
+                font-weight: bold;
+                display: inline-block;
+            ">
+                🎯 今月
+            </div>
+            {% endif %}
+            
+            <div style="margin-top: 15px;">
+                <a href="{{ url_for('month_detail', month=month) }}" class="btn btn-small">
+                    📋 詳細を見る
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px;">
+        <div class="card" style="max-width: 600px; margin: 0 auto;">
+            <h3 style="color: #2d3748; margin-bottom: 20px;">🎯 使い方</h3>
+            <div style="text-align: left; line-height: 1.8;">
+                <p style="margin-bottom: 15px;">
+                    <strong>1.</strong> 月をクリックして、その月のアクティビティを見てみましょう
+                </p>
+                <p style="margin-bottom: 15px;">
+                    <strong>2.</strong> 「アクティビティ追加」ボタンで、新しい過ごし方を記録できます
+                </p>
+                <p style="margin-bottom: 15px;">
+                    <strong>3.</strong> 一人で、友達と、家族と、お年寄りの両親と...シーン別に分けて記録できます
+                </p>
+                <p style="margin-bottom: 15px;">
+                    <strong>4.</strong> 外出、家での過ごし方、食事など、カテゴリ別に整理できます
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.month-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+    .calendar-grid {
+        padding: 10px;
+    }
+    
+    .month-card {
+        padding: 20px;
+    }
+    
+    .month-card h3 {
+        font-size: 1.3em;
+    }
+}
+</style>
+{% endblock %} 

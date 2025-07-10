@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}アクティビティ追加 - 季節カレンダー{% endblock %}
+
+{% block content %}
+<div class="add-activity">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 2.5em; color: #2d3748; margin-bottom: 10px;">
+            ➕ 新しいアクティビティを追加
+        </h2>
+        <p style="font-size: 1.2em; color: #4a5568;">
+            季節に合わせた楽しい過ごし方を記録しましょう
+        </p>
+    </div>
+
+    <div class="card" style="max-width: 800px; margin: 0 auto;">
+        <form method="POST" action="{{ url_for('add_activity') }}">
+            <!-- 月選択 -->
+            <div class="form-group">
+                <label for="month">📅 月を選択してください</label>
+                <select name="month" id="month" class="form-control" required>
+                    <option value="">月を選んでください</option>
+                    {% for month in range(1, 13) %}
+                    <option value="{{ month }}" 
+                            {% if request.args.get('month')|int == month %}selected{% endif %}>
+                        {{ month }}月 ({{ season_data[month]['name'] }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- シーン選択 -->
+            <div class="form-group">
+                <label for="activity_type">👥 誰と過ごしますか？</label>
+                <select name="activity_type" id="activity_type" class="form-control" required>
+                    <option value="">シーンを選んでください</option>
+                    <option value="一人">👤 一人で過ごす</option>
+                    <option value="友達">👥 友達と過ごす</option>
+                    <option value="家族">👨‍👩‍👧‍👦 家族と過ごす</option>
+                    <option value="お年寄り">👴👵 お年寄りの両親と過ごす</option>
+                </select>
+            </div>
+
+            <!-- カテゴリ選択 -->
+            <div class="form-group">
+                <label for="category">📂 カテゴリを選択してください</label>
+                <select name="category" id="category" class="form-control" required>
+                    <option value="">カテゴリを選んでください</option>
+                    <option value="外出">🚶‍♀️ 外出</option>
+                    <option value="家">🏠 家での過ごし方</option>
+                    <option value="食事">🍽️ 食事</option>
+                    <option value="趣味">🎨 趣味・娯楽</option>
+                    <option value="運動">🏃‍♀️ 運動・スポーツ</option>
+                    <option value="その他">✨ その他</option>
+                </select>
+            </div>
+
+            <!-- タイトル -->
+            <div class="form-group">
+                <label for="title">📝 アクティビティのタイトル</label>
+                <input type="text" name="title" id="title" class="form-control" 
+                       placeholder="例：涼みに行く、そうめんを食べる、カードゲームをする" required>
+            </div>
+
+            <!-- 詳細説明 -->
+            <div class="form-group">
+                <label for="description">📖 詳細な説明（任意）</label>
+                <textarea name="description" id="description" class="form-control" 
+                          placeholder="例：今日は暑いから家でカードゲームをしよう。家族みんなで楽しめるトランプやUNOがおすすめ。冷たいお茶と一緒に楽しむとより良い時間になります。"></textarea>
+            </div>
+
+            <!-- ボタン -->
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="btn" style="font-size: 1.2em; padding: 20px 40px;">
+                    ✅ アクティビティを保存
+                </button>
+                <a href="{{ url_for('index') }}" class="btn btn-danger" style="margin-left: 15px;">
+                    ❌ キャンセル
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- ヒント -->
+    <div class="card" style="max-width: 800px; margin: 30px auto 0;">
+        <h3 style="color: #2d3748; margin-bottom: 20px;">💡 アイデアのヒント</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+            <div>
+                <h4 style="color: #4a5568; margin-bottom: 10px;">🌞 夏の例</h4>
+                <ul style="color: #718096; line-height: 1.6;">
+                    <li>涼みに行く（カフェ、図書館）</li>
+                    <li>そうめんを食べる</li>
+                    <li>きゅうりの漬物を作る</li>
+                    <li>夕方散歩</li>
+                    <li>夏祭りに行く</li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: #4a5568; margin-bottom: 10px;">🍁 秋の例</h4>
+                <ul style="color: #718096; line-height: 1.6;">
+                    <li>紅葉を見に行く</li>
+                    <li>栗拾い</li>
+                    <li>秋の味覚を楽しむ</li>
+                    <li>読書の時間</li>
+                    <li>温泉旅行</li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: #4a5568; margin-bottom: 10px;">❄️ 冬の例</h4>
+                <ul style="color: #718096; line-height: 1.6;">
+                    <li>鍋を囲む</li>
+                    <li>雪遊び</li>
+                    <li>お正月準備</li>
+                    <li>温かい飲み物を楽しむ</li>
+                    <li>映画鑑賞</li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: #4a5568; margin-bottom: 10px;">🌸 春の例</h4>
+                <ul style="color: #718096; line-height: 1.6;">
+                    <li>お花見</li>
+                    <li>春の散歩</li>
+                    <li>新生活準備</li>
+                    <li>春の味覚を楽しむ</li>
+                    <li>ピクニック</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 月が選択されたら、その月の季節に応じたヒントを表示
+document.getElementById('month').addEventListener('change', function() {
+    const month = parseInt(this.value);
+    const seasonHints = {
+        1: '冬の寒い時期。温かい鍋や雪遊びがおすすめです。',
+        2: 'まだ寒い時期。室内での過ごし方が中心になります。',
+        3: '春の始まり。お花見や春の散歩が楽しめます。',
+        4: '春真っ盛り。新生活の準備や春の味覚を楽しみましょう。',
+        5: '春から初夏。ピクニックやアウトドアがおすすめです。',
+        6: '梅雨の時期。室内での過ごし方や雨の日を楽しむ工夫を。',
+        7: '夏本番。涼みに行く、そうめんを食べるなど夏らしい過ごし方を。',
+        8: '夏の終わり。夏祭りや夏の思い出作りを。',
+        9: '秋の始まり。秋の味覚や紅葉を楽しみましょう。',
+        10: '秋真っ盛り。栗拾いや秋の散歩がおすすめです。',
+        11: '秋の終わり。読書や室内での過ごし方が心地よい時期です。',
+        12: '冬の始まり。お正月準備や温かい過ごし方を。'
+    };
+    
+    if (month && seasonHints[month]) {
+        // ヒントを表示する処理（必要に応じて実装）
+        console.log(seasonHints[month]);
+    }
+});
+</script>
+{% endblock %} 
